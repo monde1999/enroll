@@ -2,7 +2,9 @@ class Student:
     def __init__(self, first_name:str='', last_name:str='', status:str=''):
         self.first_name = first_name
         self.last_name = last_name
-        self.status = status
+        self.enrolled = False
+        self.pending = True
+        self.closed = False
 
     def __repr__(self):
         return "Student['%s','%s','%s']" % (self.first_name,self.last_name,self.status)
@@ -20,10 +22,10 @@ class Database:
         if pk in self.__data: return self.__data[pk]
         else: return None
 
-    def retrieve__fn(self, fn:str) -> Student:
+    def retrieve__name(self, fn:str, ln:str) -> Student:
         res = None
         for k, v in self.__data.items():
-            if v.first_name==fn:
+            if v.first_name==fn and v.last_name==ln:
                 # res.append(v)
                 res = v
                 break
