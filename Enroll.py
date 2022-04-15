@@ -42,8 +42,10 @@ class Enroll:
     def set_has_passed_entrance_exam(self, has_passed:bool):
         self.has_passed_entrance_exam = has_passed
 
-    def __add_to_db(self, db:Database, status:str):
-        self.student.status = status
+    def __add_to_db(self, db:Database):
+        self.student.pending = True
+        self.student.enrolled = True
+        self.student.closed = True
         db.add(self.student)
     
     def enroll(self,database:Database):
@@ -54,7 +56,6 @@ class Enroll:
                 #enrollment
                 self.receipt = printer.print_receipt()
                 self.enrollment_status = 'Enrolled'
-                self.__add_to_db(database,self.enrollment_status)
                 
         elif self.has_completed_prerequisite_senior_high_courses and self.has_submitted_required_documents \
             and self.has_passed_entrance_exam and not self.has_paid_fee:
@@ -62,7 +63,6 @@ class Enroll:
                 # self.prompt = "Some requirements are not met. Enrollment cannot proceed."
                 self.prompt = console.prompt()
                 self.enrollment_status = 'Pending'
-                self.__add_to_db(database,self.enrollment_status)
         
         elif self.has_completed_prerequisite_senior_high_courses and self.has_submitted_required_documents \
             and not self.has_passed_entrance_exam and self.has_paid_fee:
@@ -70,6 +70,7 @@ class Enroll:
                 # self.prompt = "Some requirements are not met. Enrollment cannot proceed."
                 self.prompt = console.prompt()
                 self.enrollment_status = 'Rejected'
+
                 
         elif self.has_completed_prerequisite_senior_high_courses and self.has_submitted_required_documents \
             and not self.has_passed_entrance_exam and not self.has_paid_fee:
@@ -84,6 +85,7 @@ class Enroll:
                 # self.prompt = "Some requirements are not met. Enrollment cannot proceed."
                 self.prompt = console.prompt()
                 self.enrollment_status = 'Pending'
-                self.__add_to_db(database,self.enrollment_status)
+        
+        self.__add_to_db(database)
         
         # return res
